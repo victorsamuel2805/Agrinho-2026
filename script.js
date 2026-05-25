@@ -1,651 +1,677 @@
-/* =========================================================
-   AGRO SUSTENTÁVEL — JS COMPLETO PREMIUM
-   Funcionalidades:
-   ✅ Menu mobile animado
-   ✅ Dark mode persistente
-   ✅ Cards expansíveis
-   ✅ Scroll reveal animation
-   ✅ Scroll suave
-   ✅ Header dinâmico
-   ✅ Contadores animados
-   ✅ Calculadora de impacto
-   ✅ Toast notifications
-   ✅ Fade animations
-   ✅ Botão voltar ao topo
-   ✅ Parallax hero
-   ✅ Lazy loading de imagens
-   ✅ Ripple effect nos botões
-   ========================================================= */
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-/* =========================================================
-   UTILIDADES
-========================================================= */
+<title>AgroTech Experience</title>
 
-const $ = (selector) => document.querySelector(selector);
-const $$ = (selector) => document.querySelectorAll(selector);
+<!--
+========================================================
+AGROTECH EXPERIENCE 2026
+Licença MIT — uso livre comercial e pessoal.
 
-/* =========================================================
-   MENU MOBILE
-========================================================= */
+Imagens e vídeos:
+Pexels
+Pixabay
+Unsplash
 
-const hamburger = $("#hamburger");
-const navMenu = $("#navMenu");
+Tecnologias:
+HTML5
+CSS3
+Vanilla JS
+TSParticles
 
-if (hamburger && navMenu) {
-  hamburger.addEventListener("click", () => {
-    navMenu.classList.toggle("active");
-    hamburger.classList.toggle("open");
-  });
+Criado para experiências premium futuristas.
+========================================================
+-->
 
-  $$("#navMenu a").forEach((link) => {
-    link.addEventListener("click", () => {
-      navMenu.classList.remove("active");
-      hamburger.classList.remove("open");
-    });
-  });
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
+<style>
+
+:root{
+  --primary:#2E7D32;
+  --secondary:#66BB6A;
+  --accent:#A5D6A7;
+  --dark:#081C15;
+  --dark2:#0F2D24;
+  --light:#F1F8F4;
+  --glass:rgba(255,255,255,.08);
 }
 
-/* =========================================================
-   SCROLL SUAVE
-========================================================= */
-
-$$('a[href^="#"]').forEach((anchor) => {
-  anchor.addEventListener("click", function (e) {
-    e.preventDefault();
-
-    const target = document.querySelector(
-      this.getAttribute("href")
-    );
-
-    if (target) {
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-    }
-  });
-});
-
-/* =========================================================
-   DARK MODE
-========================================================= */
-
-const themeToggle = $("#themeToggle");
-const body = document.body;
-
-const savedTheme = localStorage.getItem("theme");
-
-if (savedTheme) {
-  body.classList.add(savedTheme);
-  updateThemeIcon(savedTheme);
-} else {
-  body.classList.add("light-mode");
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
-if (themeToggle) {
-  themeToggle.addEventListener("click", () => {
-
-    const isLight =
-      body.classList.contains("light-mode");
-
-    body.classList.toggle("light-mode");
-    body.classList.toggle("dark-mode");
-
-    const newTheme =
-      isLight ? "dark-mode" : "light-mode";
-
-    localStorage.setItem("theme", newTheme);
-
-    updateThemeIcon(newTheme);
-
-    showToast(
-      newTheme === "dark-mode"
-        ? "🌙 Dark mode ativado"
-        : "☀️ Light mode ativado"
-    );
-  });
+html{
+  scroll-behavior:smooth;
 }
 
-function updateThemeIcon(theme) {
-  if (!themeToggle) return;
-
-  themeToggle.textContent =
-    theme === "dark-mode"
-      ? "☀️"
-      : "🌙";
-}
-
-/* =========================================================
-   HEADER DINÂMICO
-========================================================= */
-
-const header = $("header");
-
-window.addEventListener("scroll", () => {
-
-  if (!header) return;
-
-  if (window.scrollY > 50) {
-    header.classList.add("scrolled");
-  } else {
-    header.classList.remove("scrolled");
-  }
-});
-
-/* =========================================================
-   CARDS EXPANSÍVEIS
-========================================================= */
-
-const expandButtons = $$(".expand-btn");
-
-expandButtons.forEach((button) => {
-
-  button.addEventListener("click", () => {
-
-    const details =
-      button.nextElementSibling;
-
-    details.classList.toggle("active");
-
-    if (details.classList.contains("active")) {
-      button.textContent = "Mostrar menos";
-    } else {
-      button.textContent = "Saiba mais";
-    }
-  });
-});
-
-/* =========================================================
-   CALCULADORA DE IMPACTO
-========================================================= */
-
-const calculateBtn = $("#calculateBtn");
-const resultBox = $("#result");
-
-if (calculateBtn) {
-
-  calculateBtn.addEventListener("click", () => {
-
-    const hectares =
-      Number($("#hectares").value);
-
-    const practice =
-      $("#practice").value;
-
-    if (!hectares || hectares <= 0) {
-
-      resultBox.innerHTML = `
-        <div class="error fade-in">
-          ⚠️ Insira um valor válido.
-        </div>
-      `;
-
-      shakeElement(resultBox);
-
-      return;
-    }
-
-    let resultMessage = "";
-
-    switch (practice) {
-
-      case "water":
-
-        const waterSaved = hectares * 50000;
-
-        resultMessage = `
-          <div class="success fade-in">
-            💧 Economia estimada:
-            <strong>
-              ${waterSaved.toLocaleString("pt-BR")}
-            </strong>
-            litros/ano.
-          </div>
-        `;
-
-        break;
-
-      case "carbon":
-
-        const carbonRetention = hectares * 1.8;
-
-        resultMessage = `
-          <div class="success fade-in">
-            🌱 Retenção estimada:
-            <strong>
-              ${carbonRetention.toFixed(1)}
-            </strong>
-            toneladas de carbono/ano.
-          </div>
-        `;
-
-        break;
-
-      case "solar":
-
-        const energy = hectares * 1200;
-
-        resultMessage = `
-          <div class="success fade-in">
-            ☀️ Energia limpa gerada:
-            <strong>
-              ${energy.toLocaleString("pt-BR")}
-            </strong>
-            kWh/ano.
-          </div>
-        `;
-
-        break;
-
-      case "trees":
-
-        const trees = hectares * 45;
-
-        resultMessage = `
-          <div class="success fade-in">
-            🌳 Árvores equivalentes:
-            <strong>
-              ${trees.toLocaleString("pt-BR")}
-            </strong>
-            árvores preservadas.
-          </div>
-        `;
-
-        break;
-    }
-
-    resultBox.innerHTML = resultMessage;
-
-    showToast("✅ Cálculo realizado com sucesso");
-  });
-}
-
-/* =========================================================
-   SCROLL REVEAL
-========================================================= */
-
-const revealElements =
-  document.querySelectorAll(
-    ".card, .calculator, .section-title, .stat"
+body{
+  font-family:'Inter',sans-serif;
+  overflow-x:hidden;
+  background:
+  linear-gradient(
+    135deg,
+    #081C15,
+    #1B4332,
+    #2D6A4F
   );
 
-const revealOnScroll = () => {
+  background-size:400% 400%;
+  animation:bg 15s ease infinite;
+  color:white;
+}
 
-  const windowHeight =
-    window.innerHeight;
+@keyframes bg{
+  0%{background-position:0 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0 50%;}
+}
 
-  revealElements.forEach((element) => {
+#tsparticles{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
 
-    const elementTop =
-      element.getBoundingClientRect().top;
+header{
+  position:fixed;
+  width:100%;
+  top:0;
+  z-index:999;
+  backdrop-filter:blur(12px);
+  background:rgba(0,0,0,.2);
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
 
-    if (elementTop < windowHeight - 100) {
-      element.classList.add("visible");
-    }
-  });
-};
+nav{
+  width:90%;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px 0;
+}
 
-window.addEventListener("scroll", revealOnScroll);
+.logo{
+  font-size:1.5rem;
+  font-weight:800;
+}
 
-revealOnScroll();
+nav ul{
+  display:flex;
+  gap:30px;
+  list-style:none;
+}
 
-/* =========================================================
-   CONTADORES ANIMADOS
-========================================================= */
+nav a{
+  text-decoration:none;
+  color:white;
+  font-weight:500;
+  transition:.3s;
+}
+
+nav a:hover{
+  color:var(--accent);
+}
+
+.hero{
+  position:relative;
+  height:100vh;
+  overflow:hidden;
+}
+
+.hero video{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  background:
+  linear-gradient(
+    rgba(0,0,0,.4),
+    rgba(0,0,0,.8)
+  );
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  top:50%;
+  transform:translateY(-50%);
+  text-align:center;
+  width:90%;
+  margin:auto;
+}
+
+.hero h1{
+  font-size:6rem;
+  font-weight:900;
+  line-height:1;
+}
+
+.hero span{
+  color:var(--accent);
+}
+
+.hero p{
+  margin-top:25px;
+  font-size:1.3rem;
+  max-width:800px;
+  margin-inline:auto;
+  line-height:1.7;
+}
+
+.btn{
+  margin-top:35px;
+  padding:18px 36px;
+  border:none;
+  border-radius:50px;
+
+  background:
+  linear-gradient(
+    45deg,
+    #2E7D32,
+    #66BB6A
+  );
+
+  color:white;
+  font-size:1rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:.4s;
+}
+
+.btn:hover{
+  transform:scale(1.05);
+  box-shadow:
+  0 10px 30px rgba(76,175,80,.5);
+}
+
+section{
+  padding:120px 10%;
+}
+
+.title{
+  font-size:3rem;
+  margin-bottom:50px;
+  font-weight:800;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:30px;
+}
+
+.card{
+  padding:35px;
+  border-radius:24px;
+  overflow:hidden;
+  transition:.4s;
+}
+
+.card:hover{
+  transform:
+  translateY(-10px)
+  scale(1.02);
+
+  box-shadow:
+  0 20px 50px rgba(0,0,0,.3);
+}
+
+.glass{
+  backdrop-filter:blur(12px);
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:
+  0 8px 30px rgba(0,0,0,.2);
+}
+
+.card h2{
+  margin-bottom:20px;
+  font-size:1.7rem;
+}
+
+.card p{
+  line-height:1.8;
+  opacity:.9;
+}
+
+.dashboard{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:25px;
+}
+
+.stat-card{
+  padding:40px;
+  border-radius:25px;
+  text-align:center;
+}
+
+.counter{
+  font-size:4rem;
+  font-weight:900;
+  color:var(--accent);
+}
+
+.ai-section{
+  text-align:center;
+}
+
+.ai-section p{
+  max-width:800px;
+  margin:auto;
+  line-height:1.9;
+  margin-top:20px;
+}
+
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:20px;
+}
+
+.gallery img{
+  width:100%;
+  height:350px;
+  object-fit:cover;
+  border-radius:24px;
+  transition:.5s;
+}
+
+.gallery img:hover{
+  transform:scale(1.03);
+}
+
+.fade-up{
+  opacity:0;
+  transform:translateY(80px);
+  transition:
+  opacity .8s ease,
+  transform .8s ease;
+}
+
+.fade-up.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+footer{
+  text-align:center;
+  padding:60px 20px;
+  opacity:.7;
+}
+
+.toggle-theme{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  width:60px;
+  height:60px;
+  border:none;
+  border-radius:50%;
+  background:var(--primary);
+  color:white;
+  cursor:pointer;
+  font-size:1.2rem;
+  z-index:999;
+}
+
+.light-mode{
+  background:#f4fff5;
+  color:#111;
+}
+
+.light-mode header{
+  background:rgba(255,255,255,.7);
+}
+
+.light-mode nav a{
+  color:#111;
+}
+
+@media(max-width:768px){
+
+  .hero h1{
+    font-size:3rem;
+  }
+
+  nav ul{
+    display:none;
+  }
+
+  .title{
+    font-size:2rem;
+  }
+
+}
+
+</style>
+</head>
+<body>
+
+<div id="tsparticles"></div>
+
+<header>
+
+<nav>
+
+<div class="logo">
+🌍 AgroTech
+</div>
+
+<ul>
+<li><a href="#about">Sobre</a></li>
+<li><a href="#esg">ESG</a></li>
+<li><a href="#ai">IA</a></li>
+<li><a href="#gallery">Galeria</a></li>
+</ul>
+
+</nav>
+
+</header>
+
+<section class="hero">
+
+<video
+autoplay
+muted
+loop
+playsinline
+id="heroVideo"
+>
+
+<source
+src="https://player.vimeo.com/external/371433846.sd.mp4?s=2367516bdf1f73c5bb0f3d65c7f5f6cbcf31b0f8&profile_id=139&oauth2_token_id=57447761"
+type="video/mp4"
+>
+
+</video>
+
+<div class="overlay"></div>
+
+<div class="hero-content fade-up">
+
+<h1>
+Agricultura <span>Inteligente</span>
+</h1>
+
+<p>
+Tecnologia, IA, sustentabilidade e monitoramento climático
+em uma experiência visual futurista inspirada em Apple,
+Tesla e Nature Tech.
+</p>
+
+<button class="btn">
+Explorar Futuro
+</button>
+
+</div>
+
+</section>
+
+<section id="about">
+
+<h2 class="title fade-up">
+🌱 Agricultura Regenerativa
+</h2>
+
+<div class="grid">
+
+<div class="card glass fade-up">
+<h2>Solo Inteligente</h2>
+<p>
+Monitoramento em tempo real da saúde do solo,
+retenção hídrica e biodiversidade sustentável.
+</p>
+</div>
+
+<div class="card glass fade-up">
+<h2>Energia Limpa</h2>
+<p>
+Painéis solares, sensores IoT e automação verde
+reduzindo impactos ambientais.
+</p>
+</div>
+
+<div class="card glass fade-up">
+<h2>Sustentabilidade Hídrica</h2>
+<p>
+Uso eficiente da água com inteligência artificial
+e análise preditiva climática.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="esg">
+
+<h2 class="title fade-up">
+📊 Dashboard ESG
+</h2>
+
+<div class="dashboard">
+
+<div class="stat-card glass fade-up">
+<h3 class="counter" data-target="1500">0</h3>
+<p>Toneladas CO₂ reduzidas</p>
+</div>
+
+<div class="stat-card glass fade-up">
+<h3 class="counter" data-target="98">0</h3>
+<p>% Eficiência hídrica</p>
+</div>
+
+<div class="stat-card glass fade-up">
+<h3 class="counter" data-target="320">0</h3>
+<p>Fazendas monitoradas</p>
+</div>
+
+<div class="stat-card glass fade-up">
+<h3 class="counter" data-target="85">0</h3>
+<p>% Energia renovável</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="ai" class="ai-section">
+
+<h2 class="title fade-up">
+🤖 Monitoramento Inteligente por IA
+</h2>
+
+<p class="fade-up">
+Sensores, satélites, drones e algoritmos de IA monitoram
+o solo em tempo real, detectando umidade, nutrientes,
+pragas e mudanças climáticas antes que elas impactem
+a produção agrícola.
+</p>
+
+</section>
+
+<section id="gallery">
+
+<h2 class="title fade-up">
+📸 AgroTech Gallery
+</h2>
+
+<div class="gallery">
+
+<img
+class="fade-up"
+src="https://images.pexels.com/photos/2132250/pexels-photo-2132250.jpeg"
+alt="Agricultura"
+/>
+
+<img
+class="fade-up"
+src="https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg"
+alt="Drone"
+/>
+
+<img
+class="fade-up"
+src="https://images.pexels.com/photos/1595104/pexels-photo-1595104.jpeg"
+alt="Plantação"
+/>
+
+</div>
+
+</section>
+
+<footer>
+
+© 2026 AgroTech Experience
+<br><br>
+Licença MIT — uso livre comercial e pessoal.
+<br>
+Assets gratuitos via Pexels/Pixabay/Unsplash.
+
+</footer>
+
+<button class="toggle-theme">
+🌙
+</button>
+
+<script>
+
+const heroVideo =
+document.getElementById("heroVideo");
+
+window.addEventListener(
+"scroll",
+() => {
+
+if(heroVideo.paused){
+heroVideo.play();
+}
+
+heroVideo.muted = false;
+
+},
+{ once:true }
+);
+
+const observer =
+new IntersectionObserver(entries=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+entry.target.classList.add("show");
+}
+
+});
+
+});
+
+document
+.querySelectorAll(".fade-up")
+.forEach(el=>observer.observe(el));
 
 const counters =
-  document.querySelectorAll(".counter");
+document.querySelectorAll(".counter");
 
-const animateCounter = (counter) => {
+counters.forEach(counter=>{
 
-  const target =
-    +counter.getAttribute("data-target");
+const update=()=>{
 
-  let count = 0;
+const target=
++counter.getAttribute("data-target");
 
-  const increment = target / 150;
+const count=
++counter.innerText;
 
-  const updateCounter = () => {
+const increment=
+target/100;
 
-    count += increment;
+if(count<target){
 
-    if (count < target) {
+counter.innerText=
+Math.ceil(count+increment);
 
-      counter.innerText =
-        Math.floor(count).toLocaleString("pt-BR");
+setTimeout(update,20);
 
-      requestAnimationFrame(updateCounter);
+}else{
 
-    } else {
+counter.innerText=target;
 
-      counter.innerText =
-        target.toLocaleString("pt-BR");
-    }
-  };
+}
 
-  updateCounter();
 };
 
-const counterObserver =
-  new IntersectionObserver((entries) => {
+update();
 
-    entries.forEach((entry) => {
-
-      if (entry.isIntersecting) {
-
-        animateCounter(entry.target);
-
-        counterObserver.unobserve(entry.target);
-      }
-    });
-  });
-
-counters.forEach((counter) => {
-  counterObserver.observe(counter);
 });
 
-/* =========================================================
-   TOAST NOTIFICATION
-========================================================= */
+const toggle =
+document.querySelector(".toggle-theme");
 
-function showToast(message) {
+toggle.onclick=()=>{
 
-  const toast =
-    document.createElement("div");
+document.body.classList.toggle("light-mode");
 
-  toast.className = "toast";
-  toast.innerHTML = message;
+};
 
-  document.body.appendChild(toast);
+tsParticles.load("tsparticles",{
 
-  setTimeout(() => {
-    toast.classList.add("show");
-  }, 100);
+fpsLimit:60,
 
-  setTimeout(() => {
+particles:{
+number:{
+value:50
+},
 
-    toast.classList.remove("show");
+color:{
+value:"#A5D6A7"
+},
 
-    setTimeout(() => {
-      toast.remove();
-    }, 400);
+links:{
+enable:true,
+color:"#A5D6A7",
+distance:120,
+opacity:.2
+},
 
-  }, 3000);
+move:{
+enable:true,
+speed:1
+},
+
+size:{
+value:{min:1,max:4}
+},
+
+opacity:{
+value:.5
 }
 
-/* =========================================================
-   BOTÃO VOLTAR AO TOPO
-========================================================= */
+},
 
-const backToTop =
-  document.createElement("button");
-
-backToTop.innerHTML = "↑";
-
-backToTop.className = "back-to-top";
-
-document.body.appendChild(backToTop);
-
-window.addEventListener("scroll", () => {
-
-  if (window.scrollY > 400) {
-    backToTop.classList.add("visible");
-  } else {
-    backToTop.classList.remove("visible");
-  }
-});
-
-backToTop.addEventListener("click", () => {
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-});
-
-/* =========================================================
-   PARALLAX HERO
-========================================================= */
-
-const hero = $(".hero");
-
-window.addEventListener("scroll", () => {
-
-  if (!hero) return;
-
-  const scroll =
-    window.pageYOffset;
-
-  hero.style.backgroundPositionY =
-    scroll * 0.5 + "px";
-});
-
-/* =========================================================
-   LAZY LOADING DE IMAGENS
-========================================================= */
-
-const lazyImages =
-  document.querySelectorAll("img[data-src]");
-
-const imageObserver =
-  new IntersectionObserver((entries, observer) => {
-
-    entries.forEach((entry) => {
-
-      if (entry.isIntersecting) {
-
-        const img = entry.target;
-
-        img.src = img.dataset.src;
-
-        img.onload = () => {
-          img.classList.add("loaded");
-        };
-
-        observer.unobserve(img);
-      }
-    });
-  });
-
-lazyImages.forEach((img) => {
-  imageObserver.observe(img);
-});
-
-/* =========================================================
-   EFEITO RIPPLE NOS BOTÕES
-========================================================= */
-
-const buttons =
-  document.querySelectorAll(
-    "button, .btn"
-  );
-
-buttons.forEach((button) => {
-
-  button.addEventListener("click", function (e) {
-
-    const ripple =
-      document.createElement("span");
-
-    ripple.classList.add("ripple");
-
-    const rect =
-      button.getBoundingClientRect();
-
-    ripple.style.left =
-      e.clientX - rect.left + "px";
-
-    ripple.style.top =
-      e.clientY - rect.top + "px";
-
-    this.appendChild(ripple);
-
-    setTimeout(() => {
-      ripple.remove();
-    }, 600);
-  });
-});
-
-/* =========================================================
-   ANIMAÇÃO SHAKE
-========================================================= */
-
-function shakeElement(element) {
-
-  element.classList.add("shake");
-
-  setTimeout(() => {
-    element.classList.remove("shake");
-  }, 500);
+background:{
+color:"transparent"
 }
 
-/* =========================================================
-   DETECÇÃO DE MOBILE
-========================================================= */
-
-function isMobile() {
-  return window.innerWidth <= 768;
-}
-
-if (isMobile()) {
-  console.log("📱 Mobile mode");
-}
-
-/* =========================================================
-   PRELOADER
-========================================================= */
-
-window.addEventListener("load", () => {
-
-  const preloader =
-    document.querySelector(".preloader");
-
-  if (preloader) {
-
-    preloader.classList.add("hide");
-
-    setTimeout(() => {
-      preloader.remove();
-    }, 500);
-  }
 });
 
-/* =========================================================
-   EFEITO DIGITAÇÃO NO HERO
-========================================================= */
+</script>
 
-const typingElement =
-  document.querySelector(".typing");
-
-if (typingElement) {
-
-  const text =
-    typingElement.dataset.text;
-
-  let index = 0;
-
-  function typeEffect() {
-
-    if (index < text.length) {
-
-      typingElement.innerHTML +=
-        text.charAt(index);
-
-      index++;
-
-      setTimeout(typeEffect, 80);
-    }
-  }
-
-  typingElement.innerHTML = "";
-
-  typeEffect();
-}
-
-/* =========================================================
-   PARTICLES OPCIONAL
-========================================================= */
-
-if (window.particlesJS) {
-
-  particlesJS("particles-js", {
-
-    particles: {
-
-      number: {
-        value: 50
-      },
-
-      color: {
-        value: "#2e7d32"
-      },
-
-      shape: {
-        type: "circle"
-      },
-
-      opacity: {
-        value: 0.3
-      },
-
-      size: {
-        value: 3
-      },
-
-      move: {
-        speed: 2
-      }
-    }
-  });
-}
-
-/* =========================================================
-   MENSAGEM INICIAL
-========================================================= */
-
-window.addEventListener("DOMContentLoaded", () => {
-
-  setTimeout(() => {
-
-    showToast(
-      "🌱 Bem-vindo ao Agro Sustentável"
-    );
-
-  }, 1200);
-});
-
-/* =========================================================
-   OBSERVER GLOBAL PARA FADE-IN
-========================================================= */
-
-const fadeElements =
-  document.querySelectorAll(
-    ".fade-up, .fade-left, .fade-right"
-  );
-
-const fadeObserver =
-  new IntersectionObserver((entries) => {
-
-    entries.forEach((entry) => {
-
-      if (entry.isIntersecting) {
-
-        entry.target.classList.add("show");
-
-        fadeObserver.unobserve(entry.target);
-      }
-    });
-  });
-
-fadeElements.forEach((element) => {
-  fadeObserver.observe(element);
-});
-
-/* =========================================================
-   FIM DO SISTEMA
-========================================================= */
-
-console.log(`
-🌿 Agro Sustentável Premium
-🚀 Sistema carregado com sucesso
-`);
+</body>
+</html> 
